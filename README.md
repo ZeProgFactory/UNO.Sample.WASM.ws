@@ -1,2 +1,2 @@
-# UNO.Sample.WASM.ws
+# UNO webservice sample
 UNO sample app using a webservice 
