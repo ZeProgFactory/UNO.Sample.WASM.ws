@@ -5,7 +5,7 @@
     xmlns:local="using:UNO.Sample.Webservice"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d" d:DesignWidth="654" d:DesignHeight="572">
 
    <Grid >
 
@@ -37,7 +37,8 @@
             <RowDefinition Height="3*"/>
          </Grid.RowDefinitions>
 
-         <TextBlock x:Name="tbInfo" Margin="5" />
+         <StackPanel Margin="5" Background="Lavender" />
+         <TextBlock x:Name="tbInfo" FontSize="14" Margin="5" />
 
          <ScrollViewer Grid.Row="1"  Margin="5" Background="Lavender">
             <TextBlock x:Name="tbData" TextWrapping="Wrap" />

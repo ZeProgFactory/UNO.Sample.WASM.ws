@@ -12,6 +12,7 @@ namespace ZPF
    {
       // - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  -
 
+      public static string wsServer = "";
       private static HttpClient _httpClient = null;
 
       public static bool Init()
@@ -29,12 +30,95 @@ namespace ZPF
          return _httpClient != null;
       }
 
+
+      private static Uri CalcURI(string function)
+      {
+         if (string.IsNullOrEmpty(wsServer))
+         {
+            return null;
+         };
+
+         if (string.IsNullOrEmpty(function))
+         {
+            return null;
+         };
+
+         if (!wsServer.EndsWith("/"))
+         {
+            wsServer = wsServer + '/';
+         };
+
+         if (function.StartsWith("/"))
+         {
+            function = function.Substring(1);
+         };
+
+         string URL = wsServer + function;
+
+         return new Uri(URL);
+      }
+
       // - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  -
 
       public static string LastError { get; set; }
 
       // - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  -
 
+      /// <summary>
+      /// HTTP Get - Retrieve data - OK
+      /// </summary>
+      /// <param name="Function"></param>
+      /// <param name="basicAuth"></param>
+      /// <returns></returns>
+      public static async Task<string> wGet(string Function, string basicAuth = "")
+      {
+         Uri uri = CalcURI(Function);
+
+         if (uri == null)
+         {
+            return null;
+         };
+
+         return await wGet(uri, basicAuth);
+      }
+
+      /// <summary>
+      /// HTTP Get - Retrieve data - OK
+      /// </summary>
+      /// <param name="Function"></param>
+      /// <param name="basicAuth"></param>
+      /// <returns></returns>
+      public static async Task<T> wGet<T>(string Function, string basicAuth = "")
+      {
+         Uri uri = CalcURI(Function);
+
+         if (uri == null)
+         {
+            return default(T);
+         };
+
+         var data = await wGet(uri, basicAuth);
+         return JsonSerializer.Deserialize<T>(data);
+      }
+
+      /// <summary>
+      /// HTTP Get - Retrieve data - OK
+      /// </summary>
+      /// <param name="Function"></param>
+      /// <param name="basicAuth"></param>
+      /// <returns></returns>
+      public static async Task<T> wGet<T>(Uri uri, string basicAuth = "")
+      {
+         var data = await wGet(uri, basicAuth);
+         return JsonSerializer.Deserialize<T>(data);
+      }
+
+      /// <summary>
+      /// HTTP Get - Retrieve data - OK
+      /// </summary>
+      /// <param name="uri"></param>
+      /// <param name="basicAuth"></param>
+      /// <returns></returns>
       public static async Task<string> wGet(Uri uri, string basicAuth = "")
       {
          Init();
@@ -68,6 +152,13 @@ namespace ZPF
 
       // - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  -
 
+      #region NotYetTested
+      /// <summary>
+      /// not tested
+      /// </summary>
+      /// <param name="uri"></param>
+      /// <param name="FilePath"></param>
+      /// <returns></returns>
       public static async Task<bool> wGetDownload(Uri uri, string FilePath)
       {
          Init();
@@ -95,6 +186,12 @@ namespace ZPF
 
       // - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  -
 
+      /// <summary>
+      /// not tested
+      /// </summary>
+      /// <param name="uri"></param>
+      /// <param name="oData"></param>
+      /// <returns></returns>
       public static async Task<string> wPost(Uri uri, object oData)
       {
          LastError = "";
@@ -111,6 +208,13 @@ namespace ZPF
          };
       }
 
+      /// <summary>
+      /// not tested
+      /// </summary>
+      /// <param name="uri"></param>
+      /// <param name="json"></param>
+      /// <param name="basicAuth"></param>
+      /// <returns></returns>
       public static async Task<string> wPost(Uri uri, string json, string basicAuth = "")
       {
          LastError = "";
@@ -149,6 +253,7 @@ namespace ZPF
 
          return data;
       }
+      #endregion
 
       // - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  - -  -
    }
